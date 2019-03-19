@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+    tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+    </style>
+    {% if messages %}
+        {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endif %}
+        {% endfor %}
+    {% endif %}
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel general">
+                    <header class="panel-heading tab-bg-dark-navy-blue">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a data-toggle="tab" href="#registrar_productos">INGRESAR PRODUCTOS</a>
+                            </li>
+                            <li class="">
+                                <a data-toggle="tab" href="#lista_productos">LISTA DE PRODUCTOS</a>
+                            </li>
+                        </ul>
+                    </header>
+                    <div class="panel-body">
+                        <div class="tab-content">
+                            <div id="registrar_productos" class="tab-pane active">
+                                <div class="col-md-6">
+                                    <form action="{% url 'almacen:producto' %}" method="POST">{% csrf_token %}
+                                        <div class="panel panel-primary">
+
+                                                <div class="panel-heading">Nuevo Producto</div>
+                                                <div class="panel-body">
+                                                    {{ producto_form.as_p }}
+                                                </div>
+                                              <div class="panel-footer">
+                                                        <button class="btn btn-success" type="submit" value="Submit">Registrar Producto</button>
+                                                        <button class="btn btn-danger" type="reset" value="Reset">Limpiar</button>
+                                              </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                   {% if request.user.is_staff %}
+                                        <form action="" method="POST">{% csrf_token %}
+                                        <div class="panel panel-primary">
+                                              <div class="panel-heading">Ingreso de Productos</div>
+                                              <div class="panel-body">
+                                                    {{ ingreso_form.as_p }}
+                                              </div>
+                                              <div class="panel-footer">
+                                                  <button class="btn btn-success" type="submit" value="Submit">Ingresar</button>
+                                                  <button class="btn btn-danger" type="reset" value="Reset">Limpiar</button>
+                                              </div>
+                                        </div>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div id="lista_productos" class="tab-pane">
+                                <table id="tabla1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <th>Código</th>
+                                        <th>Descripción</th>
+                                        <th>Marca</th>
+                                        <th>Color</th>
+                                        <th>Categoria</th>
+                                        <th>Longitud</th>
+                                        <th>Stock Mínimo</th>
+                                        <th>Stock Actual</th>
+                                    </thead>
+                                    <tfoot>
+                                        <th>Código</th>
+                                        <th>Descripción</th>
+                                        <th>Marca</th>
+                                        <th>Color</th>
+                                        <th>Categoria</th>
+                                        <th>Longitud</th>
+                                        <th>Stock Mínimo</th>
+                                        <th>Stock Actual</th>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for producto in productos %}
+                                        <tr>
+                                            <td>{{ producto.codigo }}</td>
+                                            <td>{{ producto.descripcion }}</td>
+                                            <td>{{ producto.marca }}</td>
+                                            <td>{{ producto.color }}</td>
+                                            <td>{{ producto.categoria }}</td>
+                                            <td>{{ producto.longitud }}</td>
+                                            <td>{{ producto.stock_minimo }}</td>
+                                            <td>{{ producto.stock_actual }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+{% block application_javascript %}
+    <script>
+    var datatable = {
+
+        "oLanguage": {
+            "oAria": {
+                "sSortAscending": " - ordenar de forma ascendente",
+                "sSortDescending": " - ordenar de forma descendente",
+                "sInfoEmpty": "No hay información para mostrar",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sSearch": "Buscar :",
+                "sZeroRecords": "No hay ningún registro",
+
+            },
+            "oPaginate": {
+                "sFirst": "Primera página",
+                "sLast": "Última página",
+                "sNext": "Página siguiente",
+                "sPrevious": "Página anterior"
+            },
+
+            "sEmptyTable": "Esta tabla no tiene datos",
+            "sInfo": "Mostrando  _START_ - _END_ de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando 0 entradas",
+            "sInfoFiltered": "(filtrados de _MAX_  registros en total)",
+            "sLengthMenu": "Motrar _MENU_ registros",
+            "sSearch": "Buscar :",
+            "sZeroRecords": "No se encontraron coincidencias"
+
+        }
+    };
+    $(document).ready(function() {
+                 // Setup - add a text input to each footer cell
+        $('#tabla1 tfoot th').each( function () {
+            var title = $('#tabla1 thead th').eq( $(this).index() ).text();
+            $(this).html( '<input type="text" placeholder="'+title+'" />' );
+        } );
+
+        // DataTable
+        var table = $('#tabla1').DataTable(datatable);
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+        $(".chosen-select").chosen({no_results_text: "No se encontró coincidencias con :", width: '100%' ,allow_single_deselect: true, });
+    } );
+    </script>
+{% endblock %}

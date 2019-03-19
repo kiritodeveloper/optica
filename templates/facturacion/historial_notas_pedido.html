@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <style>
+        tfoot input {
+            width: 100%;
+            padding: 3px;
+            box-sizing: border-box;
+        }
+    </style>
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel general">
+                    <header class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a data-toggle="tab" href="#boleta_venta">NOTAS DE PEDIDO</a>
+                            </li>
+                            <li class="">
+                                <a data-toggle="tab" href="#bloque_venta">TALONARIO DE NOTAS DE PEDIDO</a>
+                            </li>
+                        </ul>
+                    </header>
+                    <div class="panel-body">
+                        <div class="tab-content">
+                            <div id="boleta_venta" class="tab-pane active">
+                                 <table id="tabla1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <th>Nota de Pedido</th>
+                                        <th>Talonario</th>
+                                        <th>Boleta de Venta</th>
+                                        <th>DNI</th>
+                                        <th>Nombre</th>
+                                        <th>Fecha</th>
+                                        <th>Importe</th>
+                                        <th>Saldo</th>
+                                        <th>Cancelado</th>
+                                        <th>Reporte de Venta</th>
+                                    </thead>
+                                    <tfoot>
+                                        <th>Nota de Pedido</th>
+                                        <th>Talonario</th>
+                                        <th>Boleta de Venta</th>
+                                        <th>DNI</th>
+                                        <th>Nombre</th>
+                                        <th>Fecha</th>
+                                        <th>Importe</th>
+                                        <th>Saldo</th>
+                                        <th>Cancelado</th>
+                                        <th>Reporte de Venta</th>
+                                    </tfoot>
+                                    <tbody>
+                                    {% for item in notas %}
+                                        <tr>
+                                            <td>{{ item.nro }}</td>
+                                            <th>{{ item.bloque }}</th>
+                                            <td>{{ item.venta.nro }}</td>
+                                            <td>{{ item.venta.dni_cliente.dni }}</td>
+                                            <td>{{ item.venta.dni_cliente.nombre_completo }}</td>
+                                            <td>{{ item.venta.fecha }}</td>
+                                            <td>{{ item.importe }}</td>
+                                            <td>{{ item.saldo}}</td>
+                                            <td>
+                                                {% if item.venta.cancelado %}
+                                                    <img src="{% static 'images/check.png' %}" width="25" height="25" data-toggle="tooltip" title="Venta Cancelada"> Pagado
+                                                {% else %}
+                                                    <a href="{% url 'facturacion:cancelar_nota_pedido' item.id %}" target="_blank"><img src="{% static 'images/pay.png' %}" width="25" height="25" data-toggle="tooltip" title="Pagar"> Por Pagar</a>
+                                                {% endif %}
+                                            </td>
+                                            <td><a href="{% url 'facturacion:reporte' item.venta.id %}" target="_blank"><img src="{% static 'images/ver.png' %}" width="25" height="25" data-toggle="tooltip" title="Click para ver el reporte">Ver Reporte</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="bloque_venta" class="tab-pane">
+                                <div class="col-lg-6 ">
+                                        <legend>Talonario de Notas de Pedido: {{ bloque }}</legend>
+                                        <form method="POST" ACTION="{% url  'facturacion:change_BloquePedido'%}"> {% csrf_token  %}
+
+                                                <div class="form-group">
+                                                    {{ bloque_form }}
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary col-lg-12">Seleccionar Bloque</button>
+                                                </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <form action="{% url 'facturacion:new_BloquePedido' %}">
+                                            {% csrf_token %}
+                                            <div class="alert alert-info" role="alert">
+                                                <strong>Importante:</strong> El Bloque de Notas de Pedido es equivalente a los talonarios de las Notas de Pedido.
+                                                <br>
+                                                Si se selecciona un nuevo bloque de Notas de Pedidos, la numeración de las Notas de Pedido se reinician a 1 y se van autoincrementado.
+                                            </div>
+                                            <div class="alert alert-success" role="alert"><strong>Nuevo Bloque: </strong>Crea un nuevo Bloque de Notas de Pedido.</div>
+                                            <button type="submit" class="btn btn-success col-lg-12">Nuevo Bloque</button>
+                                        </form>
+                                    </div>
+                            </div>
+                        </div>
+                     </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+{% block application_javascript %}
+    <script>
+        $(document).ready(function() {
+        $(".fancybox").fancybox({
+    	openEffect	: 'elastic',
+    	closeEffect	: 'elastic',
+
+    	helpers : {
+    		title : {
+    			type : 'inside'
+    		}
+    	}
+        });
+         // Setup - add a text input to each footer cell
+        $('#tabla1 tfoot th').each( function () {
+            var title = $('#tabla1 thead th').eq( $(this).index() ).text();
+            $(this).html( '<input type="text" placeholder="'+title+'" />' );
+        } );
+
+        // DataTable
+        var table = $('#tabla1').DataTable(datatable);
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    } );
+    </script>
+{% endblock %}

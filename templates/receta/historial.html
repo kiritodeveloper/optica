@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endif %}
+        {% endfor %}
+    {% endif %}
+    <style type="text/css">
+        .panel-heading a:after {
+            font-family:'Glyphicons Halflings';
+            content:"\e114";
+            float: right;
+            color: grey;
+        }
+        .panel-heading a.collapsed:after {
+            content:"\e080";
+        }
+    </style>
+    <div class="content">
+        <div class="panel-group" id="accordion">
+            <h1 class="text-center">Datos de Cliente</h1>
+            <table class="table borderless text-center">
+                            <tr>
+                                <th rowspan="3"><img src="/media/{{ cliente.foto }}" width="300px"></th>
+                                <th>Nombre</th>
+                                <th >{{ cliente.nombre_completo }}</th>
+                                <th>DNI</th>
+                                <th >{{ cliente.dni }}</th>
+                            </tr>
+                            <tr>
+                                <td>Telefono</td>
+                                <td >{{ cliente.telefono }}</td>
+                                <td>Email</td>
+                                <td >{{ cliente.email }}</td>
+                            </tr>
+                            <tr>
+                                <td>Fecha de Nacimiento</td>
+                                <td >{{ cliente.fecha_nacimiento }}</td>
+                                <td>Ocupación</td>
+                                <td >{{ cliente.ocupacion }}</td>
+                            </tr>
+                        </table>
+            <div class="row">
+                <a href="/receta/nuevoexamen?dni={{cliente.dni}}" class="btn btn-info col-lg-12">Nueva Medida</a>
+            </div>
+            <h1 class="text-center">Historial</h1>
+            {% for item in historial %}
+
+            <div class="panel panel-default" id="panel{{ forloop.counter }}">
+                <div class="panel-heading">
+                     <h4 class="panel-title">
+                        <a data-toggle="collapse" data-target="#collapse{{ forloop.counter }}"
+                           href="#collapse{{ forloop.counter }}">
+                          <strong>Fecha</strong> {{ item.fecha|date:"c" }} <strong>Exámen número</strong> {{ item.id }}
+                        </a>
+                     </h4>
+                </div>
+                <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                  <div class="form-group">
+                                      <label for="add">ADD</label>
+                                        {{ item.add }}
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="patologia">Patología</label>
+                                    {{ item.patologia }}
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="patologia">Lente y Tratamientos</label>
+                                          {{ item.lente }} (
+                                            {% for tag in item.complementos.all %}
+                                                {{ tag.componente }}
+                                            {% endfor %}
+                                            )
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="patologia">Fecha</label>
+                                    {{ item.fecha }}
+                                  </div>
+                                    {% if item.imagen %}
+                                  <div class="form-group">
+                                      <label for="patologia">Imagen</label>
+                                      <a class="fancybox" rel="group" href="{{ item.imagen.url}}" title="{{ item.cliente.nombre_completo }} - {{ item.fecha }}"><img src="/media/{{ item.imagen }}" width="25" height="25" data-toggle="tooltip" title="Click para ver el Examen"></a>
+                                  </div>
+                                    {% endif %}
+                            </div>
+                            <div class="col-lg-9">
+                                <table class="table">
+                                    <tr>
+                                        <th></th>
+                                        <td>ESF.</td>
+                                        <td>CIL.</td>
+                                        <td>EJE.</td>
+                                        <td>DIP.</td>
+                                        <td>AV. SC.</td>
+                                        <td>AV. CC.</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Ojo Derecho</th>
+                                        <td>{{ item.od_esf }}</td>
+                                        <td>{{ item.od_cil }}</td>
+                                        <td>{{ item.od_eje }}</td>
+                                        <td>{{ item.od_dip }}</td>
+                                        <td>{{ item.od_avsc }}</td>
+                                        <td>{{ item.od_avcc }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Ojo Izquierdo</th>
+                                        <td>{{ item.oi_esf }}</td>
+                                        <td>{{ item.oi_cil }}</td>
+                                        <td>{{ item.oi_eje }}</td>
+                                        <td>{{ item.oi_dip }}</td>
+                                        <td>{{ item.oi_avsc }}</td>
+                                        <td>{{ item.oi_avcc }}</td>
+                                    </tr>
+                                </table>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                          <a class="btn btn-danger col-lg-12" href="{% url 'receta:editar' item.id %}">Editar Medición Número {{ item.id }}, Fecha:  {{ item.fecha }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
+{% block application_javascript %}
+    <script type="application/javascript">
+            $( document ).ready(function() {
+                $(".chosen-select").chosen({no_results_text: "No se encontró coincidencias con :", width: '100%' ,allow_single_deselect: true, });
+                {% if request.user.is_staff %}
+                    $("input").prop("disabled", false);
+                    $("button").prop("disabled", false);
+                {% else %}
+                    $("input").prop("disabled", true);
+                    $("button").prop("disabled", true);
+                {% endif %}
+                $(".fancybox").fancybox({
+                    openEffect	: 'elastic',
+                    closeEffect	: 'elastic',
+                    helpers : {
+                        title : {
+                            type : 'inside'
+                        }
+                    }
+                });
+
+            });
+    </script>
+{% endblock %}

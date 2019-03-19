@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style type="text/css">
+
+        .panel-heading a:after {
+            font-family:'Glyphicons Halflings';
+            content:"\e114";
+            float: right;
+            color: grey;
+        }
+        .panel-heading a.collapsed:after {
+            content:"\e080";
+        }
+
+    </style>
+    {% if messages %}
+        {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endif %}
+        {% endfor %}
+    {% endif %}
+    <div class="row">
+        <form action="{% url 'receta:editar' receta.id  %}" method="post" role="form" class="form-horizontal" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-sm-12 col-lg-6">
+                <section class="panel panel-info col-lg-12">
+                    <header class="panel-heading">
+                        Cliente
+                    </header>
+                    <div class="panel-body " >
+                        <strong>Fecha: {{ receta.fecha }}</strong>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th id="cliente_foto" rowspan="3"><img src="/media/{{ receta.cliente.foto }}" width="100"></th>
+                                <th>Nombre</th>
+                                <th id="cliente_nombre">{{ receta.cliente.nombre_completo }}</th>
+                            </tr>
+                            <tr>
+                                <td>Telefono</td>
+                                <td id="cliente_telefono">{{ receta.cliente.telefono }}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td><span class="badge bg-red" id="cliente_email">{{ receta.cliente.email }}</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    </section>
+                <section class="panel panel-warning col-lg-12">
+                        <header class="panel-heading">
+                              Tipo de Lente
+                        </header>
+                        <div class="panel-body" >
+                            <div class="form-group">
+                                  {{ form.lente.error }}
+                                  <label for="{{ form.lente.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ form.lente.label }}</label>
+                                  <div class="col-lg-10">
+                                        {{ form.lente }}
+                                  </div>
+                            </div>
+                            <div class="form-group">
+                                  {{ form.complementos.error }}
+                                  <label for="{{ form.complementos.auto_id }}" class="col-lg-2 col-sm-2 control-label">Aditivo</label>
+                                  <div class="col-lg-10">
+                                        {{ form.complementos }}
+                                  </div>
+                            </div>
+                            <div class="form-group">
+                                  {{ form.imagen.error }}
+                                  <label for="{{ form.imagen.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ form.imagen.label }}</label>
+                                  <div class="col-lg-10">
+                                        {{ form.imagen }}
+                                  </div>
+                            </div>
+                        </div>
+                    </section>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <section class="panel panel-danger col-lg-12">
+                        <header class="panel-heading">
+                            <strong>REFRACCIÓN</strong>
+                        </header>
+                        <div class="panel-body" >
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th></th>
+                                    <th>Ojo Derecho</th>
+                                    <th>Ojo Izquierdo</th>
+                                </tr>
+                                <tr>
+                                    <td>ESF.</td>
+                                    <td>{{ form.od_esf }}</td>
+                                    <td>{{ form.oi_esf }}</td>
+                                </tr>
+                                <tr>
+                                    <td>CIL.</td>
+                                    <td>{{ form.od_cil }}</td>
+                                    <td>{{ form.oi_cil }}</td>
+                                </tr>
+                                <tr>
+                                    <td>EJE.</td>
+                                    <td>{{ form.od_eje }}</td>
+                                    <td>{{ form.oi_eje }}</td>
+                                </tr>
+                                <tr>
+                                    <td>DIP.</td>
+                                    <td>{{ form.od_dip }}</td>
+                                    <td>{{ form.oi_dip }}</td>
+                                </tr>
+                                <tr>
+                                    <td>AV. SC.</td>
+                                    <td>{{ form.od_avsc }}</td>
+                                    <td>{{ form.oi_avsc }}</td>
+                                </tr>
+                                <tr>
+                                    <td>AV. CC.</td>
+                                    <td>{{ form.od_avcc }}</td>
+                                    <td>{{ form.oi_avcc }}</td>
+                                </tr>
+                            </table>
+                              <div class="form-group">
+                                <label for="add">ADD</label>
+                                    {{ form.add }}
+                              </div>
+                              <div class="form-group">
+                                  <label for="patologia">Patología</label>
+                                {{ form.patologia }}
+                              </div>
+                        </div>
+                    </section>
+            </div>
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success enviar_formulario">Editar Medición Número {{ receta.id }}, Fecha:  {{ receta.fecha }}</button>
+                </div>
+        </form>
+
+
+    </div>
+{% endblock %}
+{% block application_javascript %}
+    <script type="application/javascript">
+            $( document ).ready(function() {
+                $(".chosen-select").chosen({no_results_text: "No se encontró coincidencias con :", width: '100%' ,allow_single_deselect: true, });
+               {% comment %} {% if request.user.is_staff %}
+                    $("input").prop("disabled", false);
+                    $("button").prop("disabled", false);
+                {% else %}
+                    $("input").prop("disabled", true);
+                    $("button").prop("disabled", true);
+                {% endif %}{% endcomment %}
+
+                $(".fancybox").fancybox({
+                    openEffect	: 'elastic',
+                    closeEffect	: 'elastic',
+                    helpers : {
+                        title : {
+                            type : 'inside'
+                        }
+                    }
+                });
+
+            });
+    </script>
+{% endblock %}

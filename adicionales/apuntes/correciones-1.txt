@@ -1,0 +1,11 @@
+- BOLETA(total,abono,saldo,cancelado)
+- REPORTE:
+	RANGOS DE FECHA
+		TOTALES POR BOLETA Y NOTAS
+		POR DIA Y MES
+		Y CON GRAFICOS -> 
+- Detalle de venta -> Productos y Lunas Oftalmicas
+- Detalle de Ventas(Modificar reporte de venta)
+- Reporte de VENTA
+- error -> Calcular totales
+- 

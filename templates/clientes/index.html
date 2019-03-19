@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<style>
+    tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel general">
+                <header class="panel-heading">
+                    <strong><i class="fa fa-users"></i>&nbsp;Historial de Clientes</strong>
+                </header>
+                <div class="panel-body">
+                    <table id="clientes" class="table table-hover display">
+                        <thead>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Dirección</th>
+                            <th>Telefono</th>
+                            <th>Correo Electrónico</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Ocupacion</th>
+                            <th>Foto</th>
+                        </thead>
+                        <tfoot>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Dirección</th>
+                            <th>Telefono</th>
+                            <th>Correo Electrónico</th>
+                            <th>Fecha de Nacimineto</th>
+                            <th>Ocupacion</th>
+                            <th>Foto</th>
+                        </tfoot>
+                        <tbody>
+                            {% for item in clientes %}
+                            <tr>
+                                <td><a href="{% url 'receta:historial'%}?dni={{ item.dni }}">{{ item.dni }}</a></td>
+                                <td>{{ item.nombre }}</td>
+                                <td>{{ item.apellido }}</td>
+                                <td>{{ item.direccion }}</td>
+                                <td>{{ item.telefono }}</td>
+                                <td>{{ item.email }}</td>
+                                <td>{{ item.fecha_nacimiento|date:'d-M-Y' }}</td>
+                                <td>{{ item.ocupacion }}</td>
+                                <th><img src="/media/{{ item.foto }}" width="50px"></th>
+
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                     </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+{% block application_javascript %}
+    <script>
+
+    $(document).ready(function() {
+        // DataTable
+        var table = $('#clientes').DataTable(datatable);
+
+
+        $('#clientes tfoot th').each( function () {
+            var title = $('#clientes thead th').eq( $(this).index() ).text();
+            $(this).html( '<input type="text" placeholder="'+title+'" />' );
+        } );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+
+        $(".fancybox").fancybox({
+            openEffect	: 'elastic',
+            closeEffect	: 'elastic',
+            helpers : {
+                title : {
+                    type : 'inside'
+                }
+            }
+        });
+    } );
+    </script>
+{% endblock %}

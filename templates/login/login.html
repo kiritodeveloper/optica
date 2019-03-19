@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sistema de Administracion para la Optica Latyna</title>
+	    {% load staticfiles %}
+        <meta charset="utf-8">
+		<link href="{% static 'css/login2.css' %}" rel='stylesheet' type='text/css' />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+</head>
+<body>
+	 <div class="main">
+		<div class="login-form">
+			<h1>SISTEMA DE ADMINISTRACIÓN</h1>
+					<div class="head">
+						<img src="{% static 'images/user.png' %}" alt=""/>
+					</div>
+				<form method="post"> {% csrf_token %}
+					{{ form.as_p }}
+                    <div class="submit">
+							<input type="submit" onclick="myFunction()" value="INGRESAR" >
+					</div>	
+				</form>
+			</div>
+		</div>
+</body>
+</html>

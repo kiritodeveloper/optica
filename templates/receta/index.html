@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endif %}
+        {% endfor %}
+    {% endif %}
+    <style>
+    .borderless td, .borderless th {
+        border: none;
+    }
+    </style>
+    <div class="row">
+        <form action="{% url 'receta:index' %}" method="post" role="form" class="form-horizontal" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-sm-12 col-lg-6">
+                <section class="panel panel-primary col-lg-12">
+                    <header class="panel-heading">
+                        Cliente
+                    </header>
+                    <div class="panel-body " >
+                        <div class="col-lg-8 col-md-4 col-sm-4" style="vertical-align: middle">
+                            <div class="form-group">
+                                <label for="BuscarCliente" class=" control-label col-sm-2">DNI</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group col-lg-12">
+                                        <input type="text" class="form-control" id="BuscarCliente" name="Cliente" maxlength="8" onkeyup="search_client()"/>
+                                        <span class="input-group-addon" onclick="search_client()">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button data-toggle="modal" data-target="#cliente-modal" class=" col-lg-4 btn btn-success btn-large" id="add_cliente">Añadir Cliente</button>
+                        <table class="table borderless text-center">
+                            <tr>
+                                <th id="cliente_foto" rowspan="3">No Especificado</th>
+                                <th>Nombre</th>
+                                <th id="cliente_nombre">No Especificado</th>
+                            </tr>
+                            <tr>
+                                <td>Telefono</td>
+                                <td id="cliente_telefono">No Especificado</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td id="cliente_email">No Especificado</td>
+                            </tr>
+                        </table>
+                    </div>
+                    </section>
+                <section class="panel panel-primary col-lg-12">
+                        <header class="panel-heading">
+                              Tipo de Lente
+                        </header>
+                        <div class="panel-body" >
+                            <div class="form-group">
+                                  {{ form.lente.error }}
+                                  <label for="{{ form.lente.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ form.lente.label }}</label>
+                                  <div class="col-lg-10">
+                                        {{ form.lente }}
+                                  </div>
+                            </div>
+                            <div class="form-group">
+                                  {{ form.complementos.error }}
+                                  <label for="{{ form.complementos.auto_id }}" class="col-lg-2 col-sm-2 control-label">Aditivo</label>
+                                  <div class="col-lg-10">
+                                        {{ form.complementos }}
+                                  </div>
+                            </div>
+                            <div class="form-group">
+                                  {{ form.imagen.error }}
+                                  <label for="{{ form.imagen.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ form.imagen.label }}</label>
+                                  <div class="col-lg-10">
+                                        {{ form.imagen }}
+                                  </div>
+                            </div>
+                        </div>
+                    </section>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <section class="panel panel-primary col-lg-12">
+                        <header class="panel-heading">
+                            <strong>REFRACCIÓN</strong>
+                        </header>
+                        <div class="panel-body" >
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th></th>
+                                    <th>Ojo Derecho</th>
+                                    <th>Ojo Izquierdo</th>
+                                </tr>
+                                <tr>
+                                    <td>ESF.</td>
+                                    <td>{{ form.od_esf }}</td>
+                                    <td>{{ form.oi_esf }}</td>
+                                </tr>
+                                <tr>
+                                    <td>CIL.</td>
+                                    <td>{{ form.od_cil }}</td>
+                                    <td>{{ form.oi_cil }}</td>
+                                </tr>
+                                <tr>
+                                    <td>EJE.</td>
+                                    <td>{{ form.od_eje }}</td>
+                                    <td>{{ form.oi_eje }}</td>
+                                </tr>
+                                <tr>
+                                    <td>DIP.</td>
+                                    <td>{{ form.od_dip }}</td>
+                                    <td>{{ form.oi_dip }}</td>
+                                </tr>
+                                <tr>
+                                    <td>AV. SC.</td>
+                                    <td>{{ form.od_avsc }}</td>
+                                    <td>{{ form.oi_avsc }}</td>
+                                </tr>
+                                <tr>
+                                    <td>AV. CC.</td>
+                                    <td>{{ form.od_avcc }}</td>
+                                    <td>{{ form.oi_avcc }}</td>
+                                </tr>
+                            </table>
+                              <div class="form-group">
+                                <label for="add">ADD</label>
+                                    {{ form.add }}
+                              </div>
+                              <div class="form-group">
+                                  <label for="patologia">Patología</label>
+                                {{ form.patologia }}
+                              </div>
+                        </div>
+                    </section>
+            </div>
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-success enviar_formulario">Registrar Medición</button>
+            </div>
+        </form>
+    </div>
+
+<!-- Modal -->
+    <div id="cliente-modal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header" style="background-color: blueviolet; color: white;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <img src="{% static 'images/cliente.png' %}" width="50px" style="margin: 0 3em 0 1em">
+                    <strong>Registrar Nuevo Cliente</strong></h4>
+              </div>
+              <form id="client-form" class="form-horizontal" role="form" action="{% url 'cliente:GuardarCliente' %}" method="POST" enctype="multipart/form-data">
+              <div class="modal-body">
+                      <div id="msg">
+                      </div>
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.dni.auto_id }}">{{ cliente_form.dni.errors }}</div>
+                          <label for="{{ cliente_form.dni.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.dni.label }}</label>
+                          <div class="col-lg-10">
+                              {{ cliente_form.dni }}
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.nombre.auto_id }}">{{ cliente_form.nombre.errors }}</div>
+                          <label for="{{ cliente_form.nombre.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.nombre.label }}</label>
+                          <div class="col-lg-10">
+                              {{ cliente_form.nombre }}
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.apellido.auto_id }}">{{ cliente_form.apellido.errors }}</div>
+                          <label for="{{ cliente_form.apellido.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.apellido.label }}</label>
+                          <div class="col-lg-10">
+                              {{ cliente_form.apellido }}
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.direccion.auto_id }}">{{ cliente_form.direccion.errors }}</div>
+                          <label for="{{ cliente_form.direccion.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.direccion.label }}</label>
+                          <div class="col-lg-10">
+                              {{ cliente_form.direccion }}
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.telefono.auto_id }}">{{ cliente_form.telefono.errors }}</div>
+                          <label for="{{ cliente_form.telefono.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.telefono.label }}</label>
+                          <div class="col-lg-10">
+                              {{ cliente_form.telefono }}
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.email.auto_id }}">{{ cliente_form.email.errors }}</div>
+                          <label for="{{ cliente_form.email.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.email.label }}</label>
+                          <div class="col-lg-10">
+                              {{ cliente_form.email }}
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.fecha_nacimiento.auto_id }}">{{ cliente_form.fecha_nacimiento.errors }}</div>
+                          <label for="{{ cliente_form.fecha_nacimiento.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.fecha_nacimiento.label }}</label>
+                          <div class="col-lg-10">
+                                {{ cliente_form.fecha_nacimiento }}
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.ocupacion.auto_id }}">{{ cliente_form.ocupacion.errors }}</div>
+                          <label for="{{ cliente_form.ocupacion.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.ocupacion.label }}</label>
+                          <div class="col-lg-10">
+                              {{ cliente_form.ocupacion }}
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div id="error_{{ cliente_form.foto.auto_id }}">{{ cliente_form.foto.errors }}</div>
+                          <label for="{{ cliente_form.foto.auto_id }}" class="col-lg-2 col-sm-2 control-label">{{ cliente_form.foto.label }}</label>
+                          <div class="col-lg-10">
+                              {{ cliente_form.foto }}
+                          </div>
+                      </div>
+
+                  </div>
+                  <div class="modal-footer" style="background-color: blueviolet; color: white;">
+                    <input class="btn btn-success" type="submit" value="Registrar Nuevo Cliente" id="submit_cliente">
+                    <a href="#" class="btn btn-danger" data-dismiss="modal">Cancelar</a>
+                  </div>
+              </form>
+            </div>
+          </div>
+    </div>
+<!-- endmodal -->
+{% endblock %}
+{% block application_javascript %}
+    <script type="application/javascript">
+        // Añadiendo al Evento Click de BuscarCliente la funcion search_client
+        document.getElementById("BuscarCliente").addEventListener("onchange",search_client);
+
+        //Buscar Cliente via ajax
+           /* function search_client(){
+                $.ajax({
+                    url: "/cliente/buscar-cliente/" +  $("#BuscarCliente").val(),
+                    type: "GET",
+                    dataType: "json",
+                    async: true,
+                    success: function (j) {
+                        for(var i = 0; i< j.length; i++)
+                        {
+                            $('#cliente_foto').html(j[i]['foto']);
+                            $('#cliente_nombre').html(j[i]['nombre']);
+                            $('#cliente_telefono').html(j[i]['telefono']);
+                            $('#cliente_email').html(j[i]['email']);
+                            $('#add_cliente').attr('disabled',true);
+                        }
+                    },
+                    error: function (xhr, errmsg, err) {
+                            $('#cliente_foto').html('No existe');
+                            $('#cliente_nombre').html('Cliente no encontrado');
+                            $('#cliente_telefono').html('No existe');
+                            $('#cliente_email').html('No existe');
+                            $('#add_cliente').attr('disabled',false);
+                    }
+                });
+            }
+            //Registrar cliente via ajax
+            function registrar_cliente()
+            {
+                var formulario = new FormData( $("#client-form").get(0) );
+                $.ajax({
+                    type: $("#client-form").attr('method'), // GET or POST
+                    url: $("#client-form").attr('action'), // the file to call
+                    data: formulario,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(j){
+                        $("#msg").html("<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>" + j.mensaje + "</div>");
+                        $("#BuscarCliente").val('');
+                        $("#BuscarCliente").val(j.datos.dni);
+                        $('#client-form')[0].reset();
+                        search_client();
+                        //Limpiar formulario
+                        $("#error_id_dni").html('');
+                        $("#error_id_nombre").html('');
+                        $("#error_id_apellido").html('');
+                        $("#error_id_direccion").html('');
+                        $("#error_id_telefono").html('');
+                        $("#error_id_email").html('');
+                        $("#error_id_fecha_nacimiento").html('');
+                        $("#error_id_ocupacion").html('');
+                        $("#error_id_foto").html('');
+                        $("#cliente-modal").modal('hide');
+                    },
+                    error: function(error){
+                        $("html, #cliente-modal").animate({ scrollTop: 0 }, "slow");
+                        $("#msg").html("<div class='alert alert-danger'>" + error.responseJSON.mensaje + "</div>");
+                        console.log(error)
+                        //Limpiar formulario
+                        $("#error_id_dni").html('');
+                        $("#error_id_nombre").html('');
+                        $("#error_id_apellido").html('');
+                        $("#error_id_direccion").html('');
+                        $("#error_id_telefono").html('');
+                        $("#error_id_email").html('');
+                        $("#error_id_fecha_nacimiento").html('');
+                        $("#error_id_ocupacion").html('');
+                        $("#error_id_foto").html('');
+                        //Escribir errores en el formualrio
+                        $("#error_id_dni").html(error.responseJSON.errores.dni );
+                        $("#error_id_nombre").html(error.responseJSON.errores.nombre );
+                        $("#error_id_apellido").html(error.responseJSON.errores.apellido );
+                        $("#error_id_direccion").html(error.responseJSON.errores.direccion );
+                        $("#error_id_telefono").html(error.responseJSON.errores.telefono );
+                        $("#error_id_email").html(error.responseJSON.errores.email );
+                        $("#error_id_fecha_nacimiento").html(error.responseJSON.errores.fecha_nacimiento );
+                        $("#error_id_ocupacion").html(error.responseJSON.errores.ocupacion );
+                        $("#error_id_foto").html(error.responseJSON.errores.foto );
+                    }
+                });
+            }*/
+            $( document ).ready(function() {
+                $(".chosen-select").chosen({no_results_text: "No se encontró coincidencias con :", width: '100%' ,allow_single_deselect: true, });
+                $("#add_cliente").click(function(event)
+                  {
+                    event.preventDefault(); // cancel default behavior
+
+                  });
+
+                $('#client-form').on('submit', function(event){
+                    event.preventDefault();
+                    registrar_cliente();
+                });
+            });
+    </script>
+{% endblock %}

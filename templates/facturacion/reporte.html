@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+    {% if messages %}
+        {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endif %}
+        {% endfor %}
+    {% endif %}
+{% block content %}
+    <div class="content" style="background-color: white; border-radius: 0.5em;">
+            <h1><strong>Venta Número {{ venta.nro }}</strong></h1>
+            <strong class="text-right col-lg-12">{{ venta.fecha|date:"d M Y" }}</strong><br>
+            <strong class="text-right col-lg-12">Talonario de Boletas de Venta N° {{ venta.bloque }}</strong>
+            <h3><legend>Datos del Cliente</legend></h3>
+                <table class="table-condensed" style="width: 100%">
+                    <tr>
+                        <td><strong>Nombre </strong></td>
+                        <td>{{ venta.dni_cliente.nombre_completo }}</td>
+                        <td><strong>Teléfono </strong></td>
+                        <td>{{ venta.dni_cliente.telefono }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dirección</strong></td>
+                        <td>{{ venta.dni_cliente.direccion }}</td>
+                        <td><strong>Correo Electrónico</strong></td>
+                        <td>{{ venta.dni_cliente.email }}</td>
+                    </tr>
+                </table>
+                <h3><legend>Detalles de la venta</legend></h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td><strong>Código</strong></td>
+                            <td><strong>Producto</strong></td>
+                            <td><strong>Precio</strong></td>
+                            <td><strong>Cantidad</strong></td>
+                        </tr>
+                    </thead>
+                    {% for detalle in detalles %}
+                        <tr>
+                            <td>{{ detalle.producto.codigo }}</td>
+                            <td>{{ detalle.producto.descripcion }}</td>
+                            <td>{{ detalle.precio }} soles</td>
+                            <td>{{ detalle.cantidad }} unidades</td>
+                        </tr>
+                    {% endfor %}
+
+                    {% for item in lentes %}
+                        {% if item.lente.tipo_lente != "Ninguno" %}
+                        <tr>
+                            <td>  </td>
+                            <td>{{ item.lente }} [
+                                {% for tag in item.complementos.all %}
+                                    {{ tag.componente }},
+                                {% endfor %}
+                                ]
+                            </td>
+                            <td>{{ item.precio }} soles</td>
+                            <td>1 unidades</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+
+                    <tr>
+                        <td rowspan="3" colspan="2"><strong>Observaciones: </strong>{{ venta.observaciones }}</td>
+                        <td><strong>Importe</strong></td>
+                        <td>{{ venta.importe }} soles</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Saldo</strong></td>
+                        <td>{{ venta.saldo }} soles</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td>{{ venta.total }} soles</td>
+                    </tr>
+               </table>
+    </div>
+    <div class="row">
+        <br>
+        <div class="col-lg-12">
+            <div class="alert alert-info" role="alert">Importante: <br>Si el Saldo es <strong>negativo</strong>, significa que ese valor es el cambio que se le devolvió al cliente.
+                <br>Si el Saldo es <strong>positivo</strong>, significa que es lo que el Cliente adeuda.</div>
+        </div>
+    </div>
+
+
+{% endblock %}
