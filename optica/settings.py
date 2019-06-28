@@ -91,9 +91,9 @@ WSGI_APPLICATION = 'optica.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'latyna',
+        'NAME': 'optica',
         'USER': 'root',
-        'PASSWORD': '0pt1c4',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
