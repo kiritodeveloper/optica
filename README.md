@@ -85,3 +85,7 @@ Alias /static/ D:/Proyectos/Django/optica/static/
 </Directory>  
 
 ```
+
+8. pagina referencial web componentes :
+> pip install componet https://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python
+> pip install componet https://www.lfd.uci.edu/~gohlke/pythonlibs/#mod_wsgi
