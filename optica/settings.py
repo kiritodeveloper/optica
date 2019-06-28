@@ -134,7 +134,7 @@ STATICFILES_DIRS = (
 )
 
 SUIT_CONFIG = {
-    'ADMIN_NAME': 'Sistema de Gestion para la Optica LATYNA'
+    'ADMIN_NAME': 'Sistema de Gestion para Opticas'
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

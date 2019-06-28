@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Optica Latyna</title>
+    <title>SIS_OPT</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- bootstrap 3.0.2 -->
     <link href="{% static 'css/plugins/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
@@ -27,7 +27,7 @@
     <!-- header logo: style can be found in header.less -->
     <header class="header">
         <a href="#" class="logo">
-            Optica Latyna
+            Sistema Para Optica
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -40,7 +40,7 @@
             </a>
             <div class="navbar-right">
                 <ul class="nav navbar-nav">
-                    <li><a target="_blank" href="https://www.facebook.com/latyna.optica?fref=ts"><i class="fa fa-facebook-square"></i></a></li>
+                    <li><a target="_blank" href="https://www.facebook.com/www.elpitufofelizcom/"><i class="fa fa-facebook-square"></i></a></li>
                     <!-- Messages: style can be found in dropdown.less-->
                     {% comment %}<li class="dropdown messages-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -52,7 +52,7 @@
                             <li>
                                 <!-- inner menu: contains the actual data -->
                                 <ul class="menu">
-                                    {% for item in mensaje_productos %}
+<!--                                     {% for item in mensaje_productos %} -->
                                     <li><!-- start message -->
                                         <a href="#">
                                             <div class="pull-left">
@@ -65,7 +65,7 @@
                                             <small class="pull-right"><i class="fa fa-life-ring"></i> Stock Mínimo: {{ item.stock_minimo }}</small>
                                         </a>
                                     </li><!-- end message -->
-                                    {% endfor %}
+                                    <!-- {% endfor %} -->
                                     <li><!-- start message -->
                                         <a href="#">
                                             <div class="pull-left">
@@ -94,7 +94,7 @@
                             </li>
                             <li class="footer"><a href="#">Observar todos los mensajes</a></li>
                         </ul>
-                    </li>{% endcomment %}
+                    </li><!-- {% endcomment %} -->
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -119,7 +119,7 @@
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <!-- can use class img-circle -->
-                        <img src="{% static 'images/logo.jpg' %}"  alt="logo" />
+                        <img src="{% static 'images/lentes.png' %}"  alt="logo" />
                     </div>
 
                     <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -129,7 +129,7 @@
                                 <i class="fa fa-home "></i> <span>Menú Principal</span>
                             </a>
                         </li>
-                        {% comment %}{% if request.user.is_seller %}
+
 
                         <li>
                             <a href="{% url 'facturacion:index' %}">
@@ -147,7 +147,8 @@
                                 <i class="fa fa-credit-card"></i> <span>Notas de Pedido</span>
                             </a>
                         </li>
-                        {% endif %}{% endcomment %}
+
+
 
                         <li>
                             <a href="{% url 'cliente:index' %}">
@@ -159,20 +160,19 @@
                                 <i class="fa fa-medkit"></i> <span>Exámen Médico</span>
                             </a>
                         </li>
-                        {% comment %}{% if request.user.is_seller %}
+
                             <li>
                                 <a href="{% url 'almacen:producto' %}">
                                     <i class="fa fa-folder "></i> <span>Productos</span>
                                 </a>
                             </li>
-                        {% endif %}{% endcomment %}
-                        {% if request.user.is_staff %}
+
                         <li>
                             <a  target="_blank" href="{% url 'admin:index' %}">
                                 <i class="fa fa-archive"></i> <span>Panel de Administracion</span>
                             </a>
                         </li>
-                        {% endif %}
+
                     </ul>
                 </section>
                 <!-- /.sidebar -->
@@ -184,7 +184,7 @@
             {% endblock %}
         </section><!-- /.content -->
         <div class="footer-main">
-            Copyright 2015 Kevin Mike Herrera Vega. Todos los derechos reservados.
+            All Rights Reserved by kirito. Designed and Developed by <a href="https://macsoftins.com">M@c softins</a>.
         </div>
     </aside><!-- /.right-side -->
     </div>
