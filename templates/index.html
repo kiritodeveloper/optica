@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row" style="margin-bottom:5px;">
-        {% comment %}{% if request.user.is_staff %}
+        
         <div class="col-md-4">
             <div class="sm-st clearfix">
                 <span class="sm-st-icon st-violet"><i class="fa fa-envelope-o"></i></span>
@@ -15,7 +15,7 @@
             <div class="sm-st clearfix">
                 <span class="sm-st-icon st-blue"><i class="fa fa-dollar"></i></span>
                 <div class="sm-st-info">
-                    <span>{{ suma_mes }} soles</span>
+                    <span>{{ suma_mes }} Bolivianos</span>
                     Total Mensual de las Boletas de Venta
                 </div>
             </div>
@@ -24,7 +24,7 @@
             <div class="sm-st clearfix">
                 <span class="sm-st-icon st-green"><i class="fa fa-dollar"></i></span>
                 <div class="sm-st-info">
-                    <span>{{ suma_dia }} soles</span>
+                    <span>{{ suma_dia }} Bolivianos</span>
                     Total Diario de las Boletas de Venta
                 </div>
             </div>
@@ -46,7 +46,7 @@
                                 <canvas id="salesChart" style="height: 180px;"></canvas>
                               </div><!-- /.chart-responsive -->
                                 <div class="row" style="margin: 0 3em">
-                                <div class="col-lg-6" style="color:white; background-color:rgba(60,141,188,0.9);" >Total Recaudado en Soles</div>
+                                <div class="col-lg-6" style="color:white; background-color:rgba(60,141,188,0.9);" >Total Recaudado en  bolivianos </div>
                                 <div class="col-lg-6" style="background-color:rgb(210, 214, 222);">Número de Ventas</div>
                                 </div>
                             </div><!-- /.col -->
@@ -55,38 +55,38 @@
                 </div>
           </div>
         </section>
-    {% endif %}{% endcomment %}
+
     </div>
     <div class="row">
-{#        <div class="col-lg-8">#}
-{#            <div class="box box-info ">#}
-{#                <div class="box-header with-border">#}
-{#                    <h3 class="box-title">Recordatorios de Mediciones</h3>#}
-{#                </div><!-- /.box-header -->#}
-{#                <div class="box-body">#}
-{#                    <div class="table-responsive">#}
-{#                        <table class="table no-margin">#}
-{#                            <thead>#}
-{#                            <tr>#}
-{#                                <th>Fecha de Medición</th>#}
-{#                                <th>Cliente</th>#}
-{#                                <th>Correo</th>#}
-{#                            </tr>#}
-{#                            </thead>#}
-{#                            <tbody>#}
-{#                            {% for item in receta %}#}
-{#                                <tr>#}
-{#                                    <td>{{ item.fecha }}</td>#}
-{#                                    <td>{{ item.cliente.nombre_completo }}</td>#}
-{#                                    <td><a href="mailto:{{ item.cliente.email }}?Subject=Optica%20Latyna">{{ item.cliente.email }}</a></td>#}
-{#                                </tr>#}
-{#                            {% endfor %}#}
-{#                            </tbody>#}
-{#                        </table>#}
-{#                    </div><!-- /.table-responsive -->#}
-{#                </div><!-- /.box-body -->#}
-{#            </div><!-- /.box -->#}
-{#        </div>#}
+      <div class="col-lg-8">
+           <div class="box box-info ">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Recordatorios de Mediciones</h3>
+               </div><!-- /.box-header -->
+               <div class="box-body">
+                   <div class="table-responsive">
+                       <table class="table no-margin">
+                           <thead>
+                           <tr>
+                               <th>Fecha de Medición</th>
+                               <th>Cliente</th>
+                               <th>Correo</th>
+                           </tr>
+                           </thead>
+                           <tbody>
+                           {% for item in receta %}
+                               <tr>
+                                   <td>{{ item.fecha }}</td>
+                                   <td>{{ item.cliente.nombre_completo }}</td>
+                                   <td><a href="mailto:{{ item.cliente.email }}?Subject=Optica%20Latyna">{{ item.cliente.email }}</a></td>
+                               </tr>
+                           {% endfor %}
+                           </tbody>
+                       </table>
+                   </div><!-- /.table-responsive -->
+               </div><!-- /.box-body -->
+           </div><!-- /.box -->
+       </div>
         <div class="col-lg-12">
             <div class="box box-info ">
                 <div class="box-header with-border">
