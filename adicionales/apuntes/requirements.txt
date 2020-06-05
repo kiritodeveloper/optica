@@ -1,4 +1,4 @@
-Django==1.8.2
+Django==1.11.29
 django-suit==0.2.13
 Pillow==3.1.0
 python-dateutil==2.4.2
